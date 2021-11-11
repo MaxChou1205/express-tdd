@@ -21,21 +21,21 @@ describe("TodoController.createTodo", () => {
     expect(typeof TodoController.createTodo).toBe("function");
   });
 
-  it("should call TodaModel.create", () => {
-    TodoController.createTodo(req, res, next);
+  it("should call TodaModel.create", async () => {
+    await TodoController.createTodo(req, res, next);
     expect(TodoModel.create).toBeCalledWith(newTodo);
   });
 
-  it("should return 201 response code", () => {
-    TodoController.createTodo(req, res, next);
+  it("should return 201 response code", async () => {
+    await TodoController.createTodo(req, res, next);
     expect(res.statusCode).toBe(201);
     expect(res._isEndCalled()).toBe(true);
   });
 
-  it("should return json body in response", () => {
+  it("should return json body in response", async () => {
     TodoModel.create.mockReturnValue(newTodo);
 
-    TodoController.createTodo(req, res, next);
+    await TodoController.createTodo(req, res, next);
     expect(res._getJSONData()).toStrictEqual(newTodo);
   });
 });
