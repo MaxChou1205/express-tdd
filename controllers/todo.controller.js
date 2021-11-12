@@ -9,6 +9,19 @@ exports.getTodos = async (req, res, next) => {
   }
 };
 
+exports.getTodoById = async (req, res, next) => {
+  try {
+    const todo = await TodoModel.findById(req.params.todoId);
+    if (!todo) {
+      return res.status(404).send();
+    }
+    
+    res.status(200).json(todo);
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.createTodo = async (req, res, next) => {
   try {
     const createdModel = await TodoModel.create(req.body);

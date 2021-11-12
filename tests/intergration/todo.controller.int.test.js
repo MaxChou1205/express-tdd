@@ -3,6 +3,7 @@ const app = require("../../app");
 const newTodo = require("../mockData/newTodo.json");
 
 const endpointUrl = "/todos/";
+let firstTodo;
 
 describe(endpointUrl, () => {
   it(`GET ${endpointUrl}`, async () => {
@@ -12,6 +13,24 @@ describe(endpointUrl, () => {
     expect(Array.isArray(response.body)).toBe(true);
     expect(response.body[0].title).toBeDefined();
     expect(response.body[0].done).toBeDefined();
+
+    firstTodo = response.body[0];
+  });
+
+  it(`GET by id ${endpointUrl} :todoId`, async () => {
+    const response = await request(app).get(endpointUrl + firstTodo._id);
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body.title).toBe(firstTodo.title);
+    expect(response.body.done).toBe(firstTodo.done);
+  });
+
+  it(`GET id doesn't exist ${endpointUrl} :todoId`, async () => {
+    const response = await request(app).get(
+      endpointUrl + "618ce43b13ffb21adee45a67"
+    );
+
+    expect(response.statusCode).toBe(404);
   });
 
   it(`POST ${endpointUrl}`, async () => {
