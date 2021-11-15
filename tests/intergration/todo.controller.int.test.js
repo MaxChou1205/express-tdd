@@ -72,4 +72,22 @@ describe(endpointUrl, () => {
 
     expect(response.statusCode).toBe(404);
   });
+
+  it(`DELETE ${endpointUrl}`, async () => {
+    const response = await request(app)
+      .put(endpointUrl + newTodoId)
+      .send();
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body.title).toBeDefined();
+    expect(response.body.done).toBeDefined();
+  });
+
+  it(`DELETE id doesn't exist ${endpointUrl} :todoId`, async () => {
+    const response = await request(app)
+      .put(endpointUrl + "618ce43b13ffb21adee45a67")
+      .send();
+
+    expect(response.statusCode).toBe(404);
+  });
 });
