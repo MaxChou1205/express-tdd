@@ -3,7 +3,7 @@ const app = require("../../app");
 const newTodo = require("../mockData/newTodo.json");
 
 const endpointUrl = "/todos/";
-let firstTodo;
+let firstTodo, newTodoId;
 
 describe(endpointUrl, () => {
   it(`GET ${endpointUrl}`, async () => {
@@ -39,6 +39,8 @@ describe(endpointUrl, () => {
     expect(response.statusCode).toBe(201);
     expect(response.body.title).toBe(newTodo.title);
     expect(response.body.done).toBe(newTodo.done);
+
+    newTodoId = response.body._id;
   });
 
   it(`should return error 500 on POST with invalid data ${endpointUrl}`, async () => {
@@ -49,5 +51,25 @@ describe(endpointUrl, () => {
     expect(response.body).toStrictEqual({
       message: "Todo validation failed: done: Path `done` is required."
     });
+  });
+
+  it(`PUT ${endpointUrl}`, async () => {
+    const testData = { title: "PUT test.", done: true };
+    const response = await request(app)
+      .put(endpointUrl + newTodoId)
+      .send(testData);
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body.title).toBe(testData.title);
+    expect(response.body.done).toBe(testData.done);
+  });
+
+  it(`PUT id doesn't exist ${endpointUrl} :todoId`, async () => {
+    const testData = { title: "PUT test.", done: true };
+    const response = await request(app)
+      .put(endpointUrl + "618ce43b13ffb21adee45a67")
+      .send(testData);
+
+    expect(response.statusCode).toBe(404);
   });
 });
